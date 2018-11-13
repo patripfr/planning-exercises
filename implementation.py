@@ -38,6 +38,7 @@ class CarDynamics(GenericKinematicsSE2):
         :param c0: initial configuration
         :param t0: initial time
         """
+
         check_isinstance(parameters, CarParameters)
         self.parameters = parameters
         GenericKinematicsSE2.__init__(self, c0, t0)
@@ -50,10 +51,12 @@ class CarDynamics(GenericKinematicsSE2):
         :return:
         """
         check_isinstance(commands, CarCommands)
-
         # Your code comes here!
-        linear = [0,0]
-        angular = 0
+        position, direction = geo.translation_angle_from_SE2(self.q0)
+        print(position,direction,self.t0)
+        linear = [commands.linear_velocity,0]
+        angular = (commands.linear_velocity/self.parameters.wheel_distance)*np.tan(commands.steering_angle)
+        #print(linear,angular)
         # represent this as se(2)
         commands_se2 = geo.se2_from_linear_angular(linear, angular)
 
